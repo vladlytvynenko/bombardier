@@ -10,7 +10,7 @@ import (
 type config struct {
 	numConns                       uint64
 	numReqs                        *uint64
-	disableKeepAlives         bool
+	disableKeepAlives              bool
 	duration                       *time.Duration
 	url, method, certPath, keyPath string
 	body, bodyFilePath             string
@@ -25,7 +25,7 @@ type config struct {
 	rate                     *uint64
 	clientType               clientTyp
 
-	printIntro, printProgress, printResult bool
+	printIntro, printProgress, printResult, printProgressStatistics bool
 
 	format format
 }

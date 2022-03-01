@@ -192,15 +192,15 @@ func (k *kingpinParser) parse(args []string) (config, error) {
 	if err != nil {
 		return emptyConf, err
 	}
-	pi, pp, pr := true, true, true
+	pi, pp, pr, pps := true, true, true, true
 	if k.printSpec.val != nil {
-		pi, pp, pr, err = parsePrintSpec(*k.printSpec.val)
+		pi, pp, pr, pps, err = parsePrintSpec(*k.printSpec.val)
 		if err != nil {
 			return emptyConf, err
 		}
 	}
 	if k.noPrint {
-		pi, pp, pr = false, false, false
+		pi, pp, pr, pps = false, false, false, false
 	}
 	format := formatFromString(k.formatSpec)
 	if format == nil {
@@ -213,34 +213,35 @@ func (k *kingpinParser) parse(args []string) (config, error) {
 		return emptyConf, err
 	}
 	return config{
-		numConns:          k.numConns,
-		numReqs:           k.numReqs.val,
-		duration:          k.duration.val,
-		url:               url,
-		headers:           k.headers,
-		timeout:           k.timeout,
-		method:            k.method,
-		body:              k.body,
-		bodyFilePath:      k.bodyFilePath,
-		stream:            k.stream,
-		keyPath:           k.keyPath,
-		certPath:          k.certPath,
-		printLatencies:    k.latencies,
-		insecure:          k.insecure,
-		disableKeepAlives: k.disableKeepAlives,
-		rate:              k.rate.val,
-		clientType:        k.clientType,
-		printIntro:        pi,
-		printProgress:     pp,
-		printResult:       pr,
-		format:            format,
+		numConns:                k.numConns,
+		numReqs:                 k.numReqs.val,
+		duration:                k.duration.val,
+		url:                     url,
+		headers:                 k.headers,
+		timeout:                 k.timeout,
+		method:                  k.method,
+		body:                    k.body,
+		bodyFilePath:            k.bodyFilePath,
+		stream:                  k.stream,
+		keyPath:                 k.keyPath,
+		certPath:                k.certPath,
+		printLatencies:          k.latencies,
+		insecure:                k.insecure,
+		disableKeepAlives:       k.disableKeepAlives,
+		rate:                    k.rate.val,
+		clientType:              k.clientType,
+		printIntro:              pi,
+		printProgress:           pp,
+		printProgressStatistics: pps,
+		printResult:             pr,
+		format:                  format,
 	}, nil
 }
 
-func parsePrintSpec(spec string) (bool, bool, bool, error) {
-	pi, pp, pr := false, false, false
+func parsePrintSpec(spec string) (bool, bool, bool, bool, error) {
+	pi, pp, pr, pps := false, false, false, false
 	if spec == "" {
-		return false, false, false, errEmptyPrintSpec
+		return false, false, false, false, errEmptyPrintSpec
 	}
 	parts := strings.Split(spec, ",")
 	partsCount := 0
@@ -252,19 +253,21 @@ func parsePrintSpec(spec string) (bool, bool, bool, error) {
 			pp = true
 		case "r", "result":
 			pr = true
+		case "s", "statistics":
+			pps = true
 		default:
-			return false, false, false,
+			return false, false, false, false,
 				fmt.Errorf("%q is not a valid part of print spec", p)
 		}
 		partsCount++
 	}
-	if partsCount < 1 || partsCount > 3 {
-		return false, false, false,
+	if partsCount < 1 || partsCount > 4 {
+		return false, false, false, false,
 			fmt.Errorf(
-				"Spec %q has too many parts, at most 3 are allowed", spec,
+				"Spec %q has too many parts, at most 4 are allowed", spec,
 			)
 	}
-	return pi, pp, pr, nil
+	return pi, pp, pr, pps, nil
 }
 
 var re = regexp.MustCompile(`^(?P<proto>.+?:\/\/)?.*$`)

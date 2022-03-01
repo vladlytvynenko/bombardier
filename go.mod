@@ -9,11 +9,15 @@ require (
 	github.com/andybalholm/brotli v1.0.1 // indirect
 	github.com/cheggaaa/pb v1.0.29
 	github.com/codesenberg/concurrent v0.0.0-20180531114123-64560cfcf964
+	github.com/fatih/color v1.10.0 // indirect
 	github.com/juju/ratelimit v1.0.1
 	github.com/klauspost/compress v1.11.8 // indirect
+	github.com/mattn/go-runewidth v0.0.12 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/valyala/fasthttp v1.21.0
 	golang.org/x/net v0.0.0-20201016165138-7b1cca2348c0
+	golang.org/x/sys v0.0.0-20210403161142-5e06dd20ab57 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -283,6 +284,17 @@ func (b *bombardier) barUpdater() {
 		default:
 			current := int64(b.barrier.completed() * float64(b.bar.Total))
 			b.bar.Set64(current)
+			if b.conf.printProgressStatistics {
+				fmt.Print("\033[H\033[2J") // clear terminal
+				info := b.gatherInfo()
+				out := new(bytes.Buffer)
+				err := b.template.Execute(out, info)
+				if err != nil {
+					fmt.Fprintln(os.Stderr, err)
+				} else {
+					fmt.Println(out)
+				}
+			}
 			b.bar.Update()
 			time.Sleep(b.bar.RefreshRate)
 		}
