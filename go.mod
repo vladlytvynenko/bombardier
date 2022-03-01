@@ -1,4 +1,4 @@
-module github.com/codesenberg/bombardier
+module github.com/vladlytvynenko/bombardier
 
 go 1.15
 
